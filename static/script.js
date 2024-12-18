@@ -30,8 +30,8 @@ function sendMessage() {
     .then(data => {
         const botMessage = document.createElement('div');
         botMessage.classList.add('message', 'bot-message');
-        if (Array.isArray(data.recommendations)) {
-            botMessage.textContent = data.recommendations.join(', '); // Join recommendations into a single string
+        if (data.recommendations) {
+            botMessage.textContent = data.recommendations; // Display recommendations
         } else {
             botMessage.textContent = 'Sorry, I couldn\'t find any recommendations.';
         }
@@ -40,12 +40,15 @@ function sendMessage() {
     })
     .catch(error => {
         console.error('Error:', error);
-        const errorMessage = document.createElement('div');
-        errorMessage.classList.add('message', 'bot-message');
-        errorMessage.textContent = 'There was an error processing your request.';
-        document.getElementById('chat-box').appendChild(errorMessage);
     });
+    
 }
 
-// Attach sendMessage to the sendButton
-document.getElementById('sendButton').addEventListener('click', sendMessage);
+// Listen for Enter key to trigger message sending
+document.getElementById('user-input').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();  // Prevent the default "Enter" behavior (new line in text field)
+        sendMessage();           // Call the sendMessage function
+    }
+});
+
